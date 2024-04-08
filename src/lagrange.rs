@@ -27,7 +27,7 @@ fn barycentric_interpolate_at(k: usize, points: &[(u8, u8)]) -> u8 {
             let delta = x[j] - x[i];
             assert_ne!(delta.poly, 0, "Duplicate shares");
             w[j] /= delta;
-            w[i] -= w[j];
+            w[i] = w[i] - w[j];
         }
     }
 
@@ -73,7 +73,8 @@ pub(crate) fn interpolate(points: &[(Gf256, Gf256)]) -> Poly {
             }
         }
 
-        poly = poly.iter()
+        poly = poly
+            .iter()
             .zip(coeffs.iter())
             .map(|(&old_coeff, &add)| old_coeff + add / prod)
             .collect();
@@ -137,5 +138,4 @@ mod tests {
         }
 
     }
-
 }
